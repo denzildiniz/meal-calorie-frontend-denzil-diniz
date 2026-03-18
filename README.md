@@ -3,8 +3,8 @@
 A modern, responsive web application for tracking meal calories and nutritional information. Built with Next.js and TypeScript, featuring real-time calorie analysis, user authentication, and rate limiting.
 
 ## Live Demo
+**Hosted URL:** [https://meal-calorie-frontend-denzil-diniz.vercel.app/login](https://meal-calorie-frontend-denzil-diniz.vercel.app/login)
 
-**Hosted URL:** [https://meal-calorie-frontend-denzil-diniz-3w0wsrywl.vercel.app/login](https://meal-calorie-frontend-denzil-diniz-3w0wsrywl.vercel.app/login)
 
 **GitHub Repository:** [https://github.com/denzildiniz/meal-calorie-frontend-denzil-diniz.git](https://github.com/denzildiniz/meal-calorie-frontend-denzil-diniz.git)
 
