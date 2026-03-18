@@ -14,7 +14,9 @@ vi.mock('@/stores/mealStore');
 vi.mock('@/hooks/useRateLimit');
 vi.mock('@/lib/api');
 vi.mock('sonner');
-vi.mock('next/navigation');
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(),
+}));
 
 describe('MealForm', () => {
   const mockToken = 'test-token';
@@ -86,19 +88,26 @@ describe('MealForm', () => {
     const submitButton = screen.getByRole('button', { name: /get nutrition data/i });
 
     await user.type(dishInput, 'Pizza');
-    await user.clear(servingsInput);
-    await user.type(servingsInput, '2');
+    fireEvent.change(servingsInput, { target: { value: '2' } });
+    fireEvent.blur(dishInput);
+    fireEvent.blur(servingsInput);
 
-    // Wait for form to be valid
-    await waitFor(() => {
-      expect(submitButton).not.toBeDisabled();
-    });
-
+    // Click the submit button directly
     await user.click(submitButton);
 
-    // Wait for the API call
+    // Wait for the API call and state update
     await waitFor(() => {
-      expect(mockApi).toHaveBeenCalled();
+      expect(mockApi).toHaveBeenCalledWith(
+        '/api/get-calories',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            dish_name: 'Pizza',
+            servings: 2,
+          }),
+        },
+        'test-token'
+      );
     });
 
     expect(mockSetResult).toHaveBeenCalledWith({
@@ -145,7 +154,9 @@ describe('MealForm', () => {
     const user = userEvent.setup();
     const mockRouter = { push: vi.fn() };
 
-    vi.mocked(await import('next/navigation')).useRouter.mockReturnValue(mockRouter);
+    // Mock the useRouter hook
+    const { useRouter } = await import('next/navigation');
+    (useRouter as any).mockReturnValue(mockRouter);
 
     mockApi.mockRejectedValue({ status: 403 });
 

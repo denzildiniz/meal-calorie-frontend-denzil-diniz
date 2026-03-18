@@ -13,6 +13,6 @@ export const loginSchema = z.object({
 });
 
 export const mealSchema = z.object({
-  dish: z.string().min(2),
-  servings: z.number().min(1),
+  dish: z.string().min(2, "Dish name must be at least 2 characters").max(100, "Dish name must be less than 100 characters"),
+  servings: z.number().min(1, "Servings must be at least 1"),
 });

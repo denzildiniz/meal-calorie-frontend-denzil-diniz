@@ -5,10 +5,15 @@ import Header from "@/components/layout/Header";
 import MealForm from "@/components/meal/MealForm";
 import ResultCard from "@/components/meal/ResultCard";
 import { Search, Info } from "lucide-react";
-import { useRef, useState } from "react";
+import { useMealStore } from "@/stores/mealStore";
+import { useRef, useState, useEffect } from "react";
 
 export default function CaloriesPageClient() {
   useAuthGuard();
+
+  useEffect(() => {
+    useMealStore.getState().clearResult();
+  }, []);
 
   const resultRef = useRef<HTMLDivElement | null>(null);
   const [highlight, setHighlight] = useState(false);

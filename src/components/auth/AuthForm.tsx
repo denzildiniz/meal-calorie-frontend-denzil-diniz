@@ -93,22 +93,39 @@ export default function AuthForm({ type }: Props) {
     } catch (err: any) {
       let message = "Something went wrong";
 
-      // API error handling
-      if (err.status === 400) {
-        message = "Missing email or password";
-      } else if (err.status === 401) {
-        message = "Invalid email or password";
-      } else if (err.status === 403) {
-        message = "Access forbidden. Please try logging in again.";
-        // For auth forms, 403 might indicate token issues, so redirect after a delay
-        setTimeout(() => router.push("/login"), 2000);
-      } else if (err.status === 429) {
-        const retryAfter = err?.retryAfter;
-        const resetTime = retryAfter || timeUntilReset ? Math.ceil((timeUntilReset || 60000) / 1000) : 60;
-        message = `Too many attempts. Try again in ${resetTime} seconds.`;
-      } else if (err.message?.toLowerCase().includes("email")) {
-        message = "Email already exists";
-      }
+     // API error handling
+if (err.status === 400) {
+  message = "Missing email or password";
+
+} else if (err.status === 401) {
+  message = "Invalid email or password";
+
+} else if (err.status === 403) {
+  message = "Access forbidden. Please try logging in again.";
+  setTimeout(() => router.push("/login"), 2000);
+
+} else if (err.status === 422) {
+  // 🔥 NEW HANDLER
+  message =
+    err?.data?.message || // backend message (preferred)
+    err?.message ||       // fallback
+    "Invalid input. Please check your details.";
+
+} else if (err.status === 429) {
+  const retryAfter = err?.retryAfter;
+  const resetTime =
+    retryAfter || timeUntilReset
+      ? Math.ceil((timeUntilReset || 60000) / 1000)
+      : 60;
+
+  message = `Too many attempts. Try again in ${resetTime} seconds.`;
+
+} else if (err.message?.toLowerCase().includes("email")) {
+  message = "Email already exists";
+
+} else {
+  message = "Something went wrong. Please try again.";
+}
 
       toast.error(message);
     } finally {

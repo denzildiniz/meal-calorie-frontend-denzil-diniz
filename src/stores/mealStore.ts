@@ -7,6 +7,7 @@ interface MealState {
   history: Meal[];
   setResult: (meal: Meal) => void;
   clearHistory: () => void;
+  clearResult: () => void;
 }
 
 export const useMealStore = create<MealState>()(
@@ -20,7 +21,7 @@ export const useMealStore = create<MealState>()(
           const updatedHistory = [
             meal,
             ...state.history.filter((m) => m.dish !== meal.dish),
-          ].slice(0, 5);
+          ].slice(0, 5); 
 
           return {
             lastResult: meal,
@@ -31,6 +32,11 @@ export const useMealStore = create<MealState>()(
       clearHistory: () =>
         set({
           history: [],
+        }),
+
+      clearResult: () =>
+        set({
+          lastResult: null,
         }),
     }),
     {

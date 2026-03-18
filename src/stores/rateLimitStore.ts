@@ -26,6 +26,7 @@ export const useRateLimitStore = create<RateLimitState>((set, get) => ({
     set({
       isRateLimited: true,
       retryAfter,
+      resetTime: new Date(Date.now() + retryAfter * 1000),
     });
 
     // Auto-clear rate limit after retryAfter seconds
@@ -38,6 +39,7 @@ export const useRateLimitStore = create<RateLimitState>((set, get) => ({
     set({
       isRateLimited: false,
       retryAfter: null,
+      resetTime: null,
     });
   },
 
